@@ -6,12 +6,11 @@ module.exports = function (app) {
   let password = encodeURIComponent("Thekillerbasslose2-0");
   const cluster = "freecodecamp-cluster.gf1kd.mongodb.net";
   let uri = `mongodb+srv://${username}:${password}@${cluster}`;
-  let 
   mongoose.connect(uri);
   let issueSchema = mongoose.Schema({
     project: String,
-    title: { type: String, required: true },
-    text: { type: String, required: true },
+    title: { type: String, required: [true, "This is required"] },
+    text: { type: String, required: [true, "This is required"] },
     author: String,
     assigned: String,
     status: String,
@@ -31,10 +30,10 @@ module.exports = function (app) {
         .catch((err) => {
           console.error(err);
         });
-    })
+      })
 
-    .post(function (req, res) {
-      let project = req.params.project;
+      .post(function (req, res) {
+        let project = req.params.project;
       let IssueToSave = new Issue({
         project: project,
         title: req.body.issue_title,
@@ -54,13 +53,14 @@ module.exports = function (app) {
             status: doc.status,
             created_on: new Date.now(),
             updated_on: new Date.now(),
-            open: false
+            open: false,
           });
         })
         .catch((err) => {
           console.error(err);
-          if (err)
-          res.text({ error: "required field(s) missing" });
+          if (err == "This is required") {
+            res.text({ error: "required field(s) missing" });
+          }
         });
     })
 
