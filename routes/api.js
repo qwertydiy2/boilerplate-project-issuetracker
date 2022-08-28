@@ -30,10 +30,9 @@ module.exports = function (app) {
         .catch((err) => {
           console.error(err);
         });
-      })
-
-      .post(function (req, res) {
-        let project = req.params.project;
+    })
+    .post(function (req, res) {
+      let project = req.params.project;
       let IssueToSave = new Issue({
         project: project,
         title: req.body.issue_title,
